@@ -19,4 +19,5 @@ spec:
   - https://github.com/anvaplus/homelab-k8s-environments-apps
   - https://charts.external-secrets.io
   - https://kubernetes-sigs.github.io/external-dns/
+  - https://helm.cilium.io
 status: {}
