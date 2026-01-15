@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patches:
+  - patch: |
+      # replace default targetRevision
+      - op: replace
+        path: "/spec/sources/1/targetRevision"
+        value: "1.18.6"
+      # add custom values
+      - op: add
+        path: "/spec/sources/1/helm/valueFiles/-"
+        value: "$valuesRepo/environments/dev/cilium/custom-values/override.values.yaml"
+    target:
+      kind: Application
+      name: cilium
+
+resources:
+  - ../../../../base/cilium/
