@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patches:
+  - patch: |
+      # replace default targetRevision
+      - op: replace
+        path: "/spec/sources/1/targetRevision"
+        value: "9.3.4"
+    target:
+      kind: Application
+      name: argo-cd
+
+resources:
+  - ../../../../base/argocd/

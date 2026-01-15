@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-cd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: ""
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: argo-config
+  sources:
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
+      targetRevision: HEAD
+      ref: valuesRepo
+    - repoURL: https://argoproj.github.io/argo-helm
+      targetRevision: 9.3.4
+      chart: argo-cd
+      helm:
+        valueFiles:
+          - $valuesRepo/base/argocd/values.yaml
+  syncPolicy:
+    syncOptions:
+      - RespectIgnoreDifferences=true
+    automated:
+      selfHeal: true
