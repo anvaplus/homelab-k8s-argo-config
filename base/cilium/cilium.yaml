@@ -6,6 +6,20 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  ignoreDifferences:
+    - kind: Secret
+      name: cilium-ca
+      namespace: kube-system
+      jsonPointers:
+        - /data/ca.crt
+        - /data/ca.key
+    - kind: Secret
+      namme: kube-server-certs
+      namespace: kube-system
+      jsonPointers:
+        - /data/ca.crt
+        - /data/tls.crt
+        - /data/tls.key
   destination:
     namespace: kube-system
     server: https://kubernetes.default.svc
@@ -22,6 +36,8 @@ spec:
         valueFiles:
           - $valuesRepo/base/cilium/values.yaml
   syncPolicy:
+    syncOptions:
+      - RespectIgnoreDifferences=true
     automated:
       prune: true
       selfHeal: true

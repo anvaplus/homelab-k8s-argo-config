@@ -14,11 +14,10 @@ spec:
     namespace: '*'
     server: https://kubernetes.default.svc
   sourceRepos:
-  - https://argoproj.github.io/argo-helm
   - https://github.com/anvaplus/homelab-k8s-argo-config
   - https://github.com/anvaplus/homelab-k8s-base-manifests
   - https://github.com/anvaplus/homelab-k8s-environments
   - https://github.com/anvaplus/homelab-k8s-environments-apps
-  - https://charts.external-secrets.io
-  - https://kubernetes-sigs.github.io/external-dns/
+  - https://argoproj.github.io/argo-helm
+  - https://helm.cilium.io
 status: {}
