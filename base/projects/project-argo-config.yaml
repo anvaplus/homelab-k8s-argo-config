@@ -20,4 +20,5 @@ spec:
   - https://charts.external-secrets.io
   - https://kubernetes-sigs.github.io/external-dns/
   - https://helm.cilium.io
+  - https://1password.github.io/connect-helm-charts
 status: {}
