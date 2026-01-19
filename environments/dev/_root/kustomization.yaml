@@ -6,3 +6,4 @@ resources:
   - ../projects/
   - ../cilium/
   - ../namespaces/
+  - ../external-secrets/
