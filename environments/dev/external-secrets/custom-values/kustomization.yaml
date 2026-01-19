@@ -9,10 +9,6 @@ patches: #
         path: "/spec/sources/1/targetRevision"
         value: "2.2.0"
       
-      # add custom values
-      - op: add
-        path: "/spec/sources/1/helm/valueFiles/1"
-        value: "$valuesRepo/environments/dev/external-secrets/custom-values/custom-values.yaml"
     target:
       kind: Application
       name: 1password-connect
