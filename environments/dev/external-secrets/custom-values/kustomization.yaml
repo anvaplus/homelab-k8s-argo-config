@@ -8,10 +8,18 @@ patches: #
       - op: replace
         path: "/spec/sources/1/targetRevision"
         value: "2.2.0"
-      
     target:
       kind: Application
       name: 1password-connect
+
+  - patch: | 
+      # replace default targetRevision
+      - op: replace
+        path: "/spec/sources/1/targetRevision"
+        value: "1.2.1"
+    target:
+      kind: Application
+      name: external-secrets
 
 resources:
 - ../../../../base/external-secrets/

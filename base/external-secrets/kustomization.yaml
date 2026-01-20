@@ -3,3 +3,4 @@ kind: Kustomization
 
 resources:
   - 1password-connect/1password-conect.yaml
+  - external-secrets/external-secrets.yaml
