@@ -7,3 +7,4 @@ resources:
   - ../cilium/
   - ../namespaces/
   - ../external-secrets/
+  - ../secrets/
