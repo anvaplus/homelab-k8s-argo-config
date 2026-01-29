@@ -6,9 +6,8 @@ metadata:
   namespace: metallb-system
 spec:
     addresses:
-    # IP range 10.20.0.88 - 10.20.0.95
     # the PROD network have first 100 IP not DHCP managed
-    - 10.20.0.88/29
+    - 10.20.0.90-10.20.0.95
 
 ---
 apiVersion: metallb.io/v1beta1
