@@ -22,4 +22,5 @@ spec:
   - https://helm.cilium.io
   - https://1password.github.io/connect-helm-charts
   - https://metallb.github.io/metallb
+  - https://traefik.github.io/charts
 status: {}

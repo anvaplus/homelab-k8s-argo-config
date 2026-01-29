@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: traefik
+    server: https://kubernetes.default.svc
+  project: argo-config
+  sources:
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config.git
+      targetRevision: main
+      ref: valuesRepo
+    - repoURL: https://traefik.github.io/charts
+      chart: traefik
+      targetRevision: 39.0.0
+      helm:
+        releaseName: traefik
+        valueFiles:
+          - $valuesRepo/base/ingress/traefik/values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
