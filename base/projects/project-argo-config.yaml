@@ -21,4 +21,5 @@ spec:
   - https://kubernetes-sigs.github.io/external-dns/
   - https://helm.cilium.io
   - https://1password.github.io/connect-helm-charts
+  - https://metallb.github.io/metallb
 status: {}

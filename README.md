@@ -66,29 +66,28 @@ The workflow is based on a GitOps approach with ArgoCD:
 
 4.  **Adding New Tools**: To add a new tool, you first add its base configuration to the `base/` directory. Then, you customize it for each environment in the `environments/` directory.
 
-Currently, `ArgoCD` and `Cilium` are configured using this approach.
-
 ## Repository Structure
 
 The current structure of this repository is as follows, and it will evolve as more tools are installed in the homelab:
 ```
-├── base/                      # Base configurations for all tools
+├── base/                     # Base configurations for all tools
 │   ├── argocd/               # ArgoCD itself configuration
-│   └── cilium/               # Cilium CNI configuration
-│   └── projects/             # ArgoCD project definitions
-└── environments/              # Environment-specific overlays
+│   ├── cilium/               # Cilium CNI configuration
+│   ├── external-secrets/     # External Secrets Operator configuration
+│   ├── ingress/              # Ingress controllers configuration
+│   │   └── metallb/          # MetalLB load balancer
+│   ├── namespaces/           # Namespace definitions
+│   ├── projects/             # ArgoCD project definitions
+│   └── secrets/              # Secret configurations
+└── environments/             # Environment-specific overlays
     ├── dev/                  # Development environment configs
     │   ├── _root/            # Root application for the dev environment
     │   ├── argocd/           # ArgoCD overrides for dev
-    │   └── cilium/           # Cilium overrides for dev
-    │   └── projects/         # ArgoCD project overrides for dev
+    │   ├── cilium/           # Cilium overrides for dev
+    │   ├── external-secrets/ # External Secrets overrides for dev
+    │   ├── ingress/          # Ingress overrides for dev
+    │   │   └── metallb/      # MetalLB configuration for dev
+    │   ├── projects/         # ArgoCD project overrides for dev
+    │   └── secrets/          # Secrets overrides for dev
     └── prod/                 # Production environment configs
 ```
-
-## Secrets Management
-
-Secrets should be managed using a tool like the External Secrets Operator.
-- Store secrets in a secure vault (e.g., HashiCorp Vault, GCP Secret Manager, etc.).
-- External Secrets will sync them to Kubernetes secrets.
-- Never commit actual secret values to this repository.
-
