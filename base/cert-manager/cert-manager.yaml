@@ -12,14 +12,13 @@ spec:
     server: https://kubernetes.default.svc
   project: argo-config
   sources:
-    - repoURL: https://github.com/anvaplus/homelab-k8s-base-manifests
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
       targetRevision: HEAD
       ref: valuesRepo
 
     - repoURL: oci://quay.io/jetstack/charts/cert-manager
       targetRevision: 1.19.2
-      chart: cert-manager
-      path: cert-manager
+      path: .
       helm:
         valueFiles:
           - $valuesRepo/base/cert-manager/values.yaml

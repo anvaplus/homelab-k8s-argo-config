@@ -12,7 +12,7 @@ spec:
     server: https://kubernetes.default.svc
   project: argo-config
   sources:
-    - repoURL: https://github.com/anvaplus/homelab-k8s-environments-apps
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
       path: environments/dev/cert-manager/custom-values
       targetRevision: HEAD
   syncPolicy:
