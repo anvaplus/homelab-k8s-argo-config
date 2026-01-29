@@ -1,3 +1,4 @@
+providers:
   kubernetesGateway:
     # -- Enable Traefik Gateway provider for Gateway API
     enabled: true
