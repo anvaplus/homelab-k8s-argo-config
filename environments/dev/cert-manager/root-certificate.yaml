@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-certificate
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: ""
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: argo-config
+  sources:
+    - repoURL: https://github.com/anvaplus/homelab-k8s-environments-apps
+      path: environments/dev/cert-manager/custom-values
+      targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

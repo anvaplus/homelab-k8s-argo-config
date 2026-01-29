@@ -9,3 +9,4 @@ resources:
   - ../external-secrets/
   - ../secrets/
   - ../ingress/
+  - ../cert-manager/

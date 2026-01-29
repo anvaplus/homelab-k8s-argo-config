@@ -23,4 +23,6 @@ spec:
   - https://1password.github.io/connect-helm-charts
   - https://metallb.github.io/metallb
   - https://traefik.github.io/charts
+  - quay.io/jetstack/charts/cert-manager
+
 status: {}

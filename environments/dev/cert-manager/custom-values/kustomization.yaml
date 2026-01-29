@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+
+patches: # 
+  - patch: | 
+      # replace default targetRevision
+      - op: replace
+        path: "/spec/sources/1/targetRevision"
+        value: "1.19.2"
+      # add custom values
+      - op: add
+        path: "/spec/sources/1/helm/valueFiles/-"
+        value: "$valuesRepo/environments/dev/cert-manager/custom-values/custom-values.yaml"
+    target:
+      kind: Application
+      name: cert-manager
+
+resources:
+- ../../../../base/cert-manager/
