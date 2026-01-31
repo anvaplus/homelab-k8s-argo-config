@@ -2,3 +2,12 @@ providers:
   kubernetesGateway:
     # -- Enable Traefik Gateway provider for Gateway API
     enabled: true
+
+gateway:
+  enabled: true
+  listeners:
+    web:
+      port: 8000
+      protocol: HTTP
+      namespacePolicy:
+        from: All
