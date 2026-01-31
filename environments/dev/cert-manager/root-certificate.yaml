@@ -15,6 +15,11 @@ spec:
     - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
       path: environments/dev/cert-manager/custom-values
       targetRevision: HEAD
+
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
+      path: environments/dev/cert-manager/certificate
+      targetRevision: HEAD
+      
   syncPolicy:
     automated:
       prune: true

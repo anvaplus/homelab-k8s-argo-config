@@ -1,0 +1,17 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  name: wildcard.dev.thebestpractice.tech
+  namespace: traefik
+spec:
+  commonName: '*.dev.thebestpractice.tech'
+  dnsNames:
+    - '*.dev.thebestpractice.tech'
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-cluster-issuer
+  renewBefore: 360h0m0s
+  secretName: wildcard-dev-thebestpractice-tech-cert-tls
