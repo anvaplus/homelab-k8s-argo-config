@@ -2,3 +2,11 @@ crds:
   # This option decides if the CRDs should be installed
   # as part of the Helm installation.
   enabled: true
+
+# Additional command line flags to pass to cert-manager controller binary.
+# The internal network use a local DNS -> Technitium DNS server
+# for Let's Encrypt DNS-01 challenge validation we need to instruct cert-manager
+# to use public recursive nameservers only for DNS-01 challenge validation.
+extraArgs:
+  - '--dns01-recursive-nameservers-only'
+  - '--dns01-recursive-nameservers=8.8.8.8:53,1.1.1.1:53'
