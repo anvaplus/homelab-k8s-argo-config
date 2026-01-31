@@ -18,7 +18,9 @@ spec:
     - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
       path: environments/dev/ingress/traefik/
       targetRevision: HEAD
-
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
+      path: environments/dev/ingress/routes/
+      targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
