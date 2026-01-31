@@ -3,6 +3,8 @@ providers:
     # -- Enable Traefik Gateway provider for Gateway API
     enabled: true
 
+# -- Traefik Gateway configuration
+# Change listeners namespace policy to all namespaces
 gateway:
   enabled: true
   listeners:
@@ -11,3 +13,11 @@ gateway:
       protocol: HTTP
       namespacePolicy:
         from: All
+    websecure:
+      port: 8443
+      protocol: HTTPS
+      namespacePolicy:
+        from: All
+      mode: Terminate
+      certificateRefs:
+        - name: wildcard-dev-thebestpractice-tech-cert-tls
