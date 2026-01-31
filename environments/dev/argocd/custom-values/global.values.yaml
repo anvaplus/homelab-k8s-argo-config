@@ -1,0 +1,5 @@
+## Globally shared configuration
+global:
+  # -- Default domain used by all components
+  ## Used for ingresses, certificates, SSO, notifications, etc.
+  domain: argocd.dev.thebestpractice.tech
