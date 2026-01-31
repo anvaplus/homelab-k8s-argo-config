@@ -3,3 +3,8 @@ global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
   domain: argocd.dev.thebestpractice.tech
+
+configs:
+  params:
+    # Run server without TLS - disable HTTPS redirect
+    server.insecure: "true"
