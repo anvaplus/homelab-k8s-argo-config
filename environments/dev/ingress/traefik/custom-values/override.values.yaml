@@ -1,7 +1,17 @@
 providers:
+  kubernetesCRD:
+    enabled: false # Disable legacy CRD provider
+  kubernetesIngress:
+    enabled: false # Disable legacy Ingress provider
   kubernetesGateway:
-    # -- Enable Traefik Gateway provider for Gateway API
-    enabled: true
+    enabled: true # Enable the new Gateway API provider
+
+# This tells Traefik to create a service of type LoadBalancer.
+service:
+  type: LoadBalancer
+  # We explicitly request the IP from our pool
+  spec:
+    loadBalancerIP: 10.20.0.90
 
 # -- Traefik Gateway configuration
 # Change listeners namespace policy to all namespaces
