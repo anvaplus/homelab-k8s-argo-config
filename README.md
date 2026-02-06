@@ -72,10 +72,12 @@ The current structure of this repository is as follows, and it will evolve as mo
 ```
 ├── base/                     # Base configurations for all tools
 │   ├── argocd/               # ArgoCD itself configuration
+│   ├── cert-manager/         # cert-manager configuration
 │   ├── cilium/               # Cilium CNI configuration
 │   ├── external-secrets/     # External Secrets Operator configuration
 │   ├── ingress/              # Ingress controllers configuration
-│   │   └── metallb/          # MetalLB load balancer
+│   │   ├── metallb/          # MetalLB load balancer
+│   │   └── traefik/          # Traefik ingress controller
 │   ├── namespaces/           # Namespace definitions
 │   ├── projects/             # ArgoCD project definitions
 │   └── secrets/              # Secret configurations
@@ -83,11 +85,36 @@ The current structure of this repository is as follows, and it will evolve as mo
     ├── dev/                  # Development environment configs
     │   ├── _root/            # Root application for the dev environment
     │   ├── argocd/           # ArgoCD overrides for dev
+    │   ├── cert-manager/     # cert-manager overrides for dev
     │   ├── cilium/           # Cilium overrides for dev
     │   ├── external-secrets/ # External Secrets overrides for dev
     │   ├── ingress/          # Ingress overrides for dev
-    │   │   └── metallb/      # MetalLB configuration for dev
+    │   │   ├── metallb/      # MetalLB configuration for dev
+    │   │   └── traefik/      # Traefik configuration for dev
+    │   ├── namespaces/       # Namespaces overrides for dev
     │   ├── projects/         # ArgoCD project overrides for dev
     │   └── secrets/          # Secrets overrides for dev
     └── prod/                 # Production environment configs
 ```
+
+## Recent Updates
+
+### February 2026
+
+- **Gateway API Migration**: Migrated the ingress controller to utilize the Gateway API, enabling the `kubernetesGateway` provider and disabling legacy providers for more robust and standardized ingress management.
+- **HTTPRoute Management**: Deployed a dedicated ArgoCD application to manage `HTTPRoute` resources, improving the organization and management of ingress configurations.
+- **Global Domain Configuration**: Introduced a global configuration file to share a default domain across ArgoCD components, streamlining the setup for ingresses, certificates, and other services.
+- **Wildcard Certificate Automation**: Added `cert-manager` resources to automate the issuance of wildcard certificates using Let's Encrypt and a DNS01 solver, simplifying TLS management.
+- **Public DNS Resolvers for Cert-Manager**: Configured `cert-manager` to use public recursive nameservers for DNS-01 challenges, ensuring reliable domain validation in local DNS environments.
+- **External Secrets for DNS Service Account**: Integrated `External Secrets` to securely fetch `cert-manager` DNS service account credentials from 1Password.
+
+### January 2026
+
+- **Cert-Manager Integration**: Added `cert-manager` base manifests and configurations to manage TLS certificates within the cluster.
+- **Traefik Ingress Controller**: Deployed `Traefik` as the ingress controller, managed by ArgoCD, and enabled the Gateway API for modern ingress routing.
+- **Gateway API in Cilium**: Enabled Gateway API support in the Cilium configuration to align with modern Kubernetes networking standards.
+- **MetalLB for Load Balancing**: Integrated `MetalLB` to provide load balancer services, including IP address pool configuration.
+- **1Password Integration**: Set up the `External Secrets Operator` to fetch secrets from `1Password`, enhancing security and secret management.
+- **Namespace Management**: Added centralized namespace management through ArgoCD for better resource organization.
+- **Cilium Migration to ArgoCD**: Migrated the Cilium installation to be managed by ArgoCD for declarative configuration and automated deployments.
+- **ArgoCD Project and Application Setup**: Configured the initial ArgoCD project and a root application to manage resources in a GitOps-centric workflow.
