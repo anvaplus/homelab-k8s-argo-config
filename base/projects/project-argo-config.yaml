@@ -24,5 +24,6 @@ spec:
   - https://metallb.github.io/metallb
   - https://traefik.github.io/charts
   - oci://quay.io/jetstack/charts/cert-manager
+  - https://charts.longhorn.io/
 
 status: {}

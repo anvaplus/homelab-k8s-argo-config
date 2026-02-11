@@ -10,3 +10,4 @@ resources:
   - ../secrets/
   - ../ingress/
   - ../cert-manager/
+  - ../longhorn/
