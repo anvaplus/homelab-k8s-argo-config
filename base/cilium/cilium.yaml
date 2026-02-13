@@ -14,7 +14,7 @@ spec:
         - /data/ca.crt
         - /data/ca.key
     - kind: Secret
-      namme: kube-server-certs
+      name: hubble-server-certs
       namespace: kube-system
       jsonPointers:
         - /data/ca.crt
