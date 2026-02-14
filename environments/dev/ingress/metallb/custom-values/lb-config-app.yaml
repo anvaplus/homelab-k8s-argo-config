@@ -1,23 +1,22 @@
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: routes
+  name: lb-config
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     name: ""
-    namespace: traefik
+    namespace: metallb-system
     server: https://kubernetes.default.svc
   project: argo-config
-  sources:
-    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
-      path: environments/dev/ingress/routes/http-routes/
-      targetRevision: HEAD
+  source:
+    repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
+    targetRevision: HEAD
+    path: environments/dev/ingress/metallb/custom-values/resources
   syncPolicy:
     automated:
       prune: true
