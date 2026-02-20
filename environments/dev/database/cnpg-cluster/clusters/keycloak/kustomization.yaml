@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../../../../base/database/cnpg-cluster/
+
+patches:
+  - target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: Application
+      name: cnpg-cluster
+    patch: |
+      - op: replace
+        path: "/spec/sources/1/targetRevision"
+        value: "0.5.0"
+      # add custom values
+      - op: add
+        path: "/spec/sources/1/helm/valueFiles/-"
+        value: "$valuesRepo/environments/dev/database/cnpg-cluster/keycloak/override.values.yaml"
+      - op: replace
+        path: /metadata/name
+        value: cnfg-cluster-keycloak
+      - op: replace
+        path: /spec/destination/namespace
+        value: keycloak
+      - op: replace
+        path: /spec/sources/1/helm/releaseName
+        value: cnfg-cluster-keycloak

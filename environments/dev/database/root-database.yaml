@@ -15,6 +15,9 @@ spec:
     - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
       path: environments/dev/database/cnpg-operator/
       targetRevision: HEAD
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
+      path: environments/dev/database/cnpg-cluster/
+      targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true

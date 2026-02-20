@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cnpg-cluster # add a suffix to the name if you want to deploy multiple clusters
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: cnpg-system # channge to the namespace where you want to deploy the cluster
+    server: https://kubernetes.default.svc
+  project: argo-config
+  sources:
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config.git
+      targetRevision: main
+      ref: valuesRepo
+    - repoURL: https://cloudnative-pg.github.io/charts
+      path: cnpg
+      chart: cluster
+      targetRevision: 0.5.0
+      helm:
+        releaseName: cnpg-cluster # add a suffix to the release name if you want to deploy multiple clusters
+        valueFiles:
+          - $valuesRepo/base/database/cnpg-cluster/values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
