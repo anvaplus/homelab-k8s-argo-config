@@ -1,0 +1,15 @@
+# This StorageClass is designed for use with the CNPG (Cloud Native PostgreSQL Operator) cluster, specifically for the Keycloak instance. 
+# It is configured to provide optimal performance and reliability for database workloads, with a focus on data locality and efficient storage management.
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-cnpg
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+parameters:
+  numberOfReplicas: "1"
+  staleReplicaTimeout: "2880" # 48 hours
+  fromBackup: ""
+  fsType: "ext4"
+  dataLocality: "strict-local" # Critical for DB performance
