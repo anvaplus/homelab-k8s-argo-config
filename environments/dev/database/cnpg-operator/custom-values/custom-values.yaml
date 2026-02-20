@@ -1,0 +1,7 @@
+# Operator configuration.
+config:
+  # -- This option determines if the operator is responsible for observing
+  # events across the entire Kubernetes cluster or if its focus should be
+  # narrowed down to the specific namespace within which it has been deployed.
+  ## This is the default value. It is added here for clarity.
+  clusterWide: true

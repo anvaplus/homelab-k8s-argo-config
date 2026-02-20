@@ -11,3 +11,4 @@ resources:
   - ../ingress/
   - ../cert-manager/
   - ../longhorn/
+  - ../database/
