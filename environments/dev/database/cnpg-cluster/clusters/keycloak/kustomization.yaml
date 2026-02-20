@@ -17,7 +17,7 @@ patches:
       # add custom values
       - op: add
         path: "/spec/sources/1/helm/valueFiles/-"
-        value: "$valuesRepo/environments/dev/database/cnpg-cluster/keycloak/override.values.yaml"
+        value: "$valuesRepo/environments/dev/database/cnpg-cluster/clusters/keycloak/override.values.yaml"
       - op: replace
         path: /metadata/name
         value: cnfg-cluster-keycloak
