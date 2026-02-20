@@ -25,5 +25,6 @@ spec:
   - https://traefik.github.io/charts
   - oci://quay.io/jetstack/charts/cert-manager
   - https://charts.longhorn.io/
+  - https://cloudnative-pg.github.io/charts
 
 status: {}
