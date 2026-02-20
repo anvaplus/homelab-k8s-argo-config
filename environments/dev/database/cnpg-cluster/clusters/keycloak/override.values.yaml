@@ -5,10 +5,10 @@ version:
   postgresql: "16"
 
 cluster:
-  instances: 1
+  instances: 3
   storage:
     size: 1Gi
-    storageClass: "longhorn"
+    storageClass: "longhorn-cnpg"
 
 backups:
   enabled: false
