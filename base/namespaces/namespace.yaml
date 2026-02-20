@@ -34,3 +34,7 @@ items:
   kind: Namespace
   metadata:
     name: cnpg-system
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: keycloak
