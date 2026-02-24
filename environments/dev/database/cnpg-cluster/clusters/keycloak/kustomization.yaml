@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../../../../../base/database/cnpg-cluster/
+  - db-secrets.yaml
 
 patches:
   - target:
@@ -20,10 +21,10 @@ patches:
         value: "$valuesRepo/environments/dev/database/cnpg-cluster/clusters/keycloak/override.values.yaml"
       - op: replace
         path: /metadata/name
-        value: cnfg-cluster-keycloak
+        value: cnpg-keycloak
       - op: replace
         path: /spec/destination/namespace
         value: keycloak
       - op: replace
         path: /spec/sources/1/helm/releaseName
-        value: cnfg-cluster-keycloak
+        value: cnpg-keycloak

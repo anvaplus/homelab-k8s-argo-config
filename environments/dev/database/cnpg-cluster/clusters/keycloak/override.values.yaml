@@ -7,8 +7,14 @@ version:
 cluster:
   instances: 3
   storage:
-    size: 1Gi
+    size: 2Gi
     storageClass: "longhorn-cnpg"
+  superuserSecret: keycloak-db-superuser
+  initdb:
+    database: keycloak
+    owner: keycloak
+    secret:
+      name: keycloak-db-user
 
 backups:
   enabled: false
