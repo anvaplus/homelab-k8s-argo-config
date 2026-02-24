@@ -115,13 +115,13 @@ The current structure of this repository is as follows, and it will evolve as mo
 - **Sync Waves for Deployment Ordering**: Implemented ArgoCD sync waves to ensure proper deployment order for dependent resources, such as the `CloudNativePG` operator and its clusters.
 - **Gateway API Migration**: Migrated the ingress controller to utilize the Gateway API, enabling the `kubernetesGateway` provider and disabling legacy providers for more robust and standardized ingress management.
 - **HTTPRoute Management**: Deployed a dedicated ArgoCD application to manage `HTTPRoute` resources, improving the organization and management of ingress configurations.
-
-### January 2026
-
 - **Global Domain Configuration**: Introduced a global configuration file to share a default domain across ArgoCD components, streamlining the setup for ingresses, certificates, and other services.
 - **Wildcard Certificate Automation**: Added `cert-manager` resources to automate the issuance of wildcard certificates using Let's Encrypt and a DNS01 solver, simplifying TLS management.
 - **Public DNS Resolvers for Cert-Manager**: Configured `cert-manager` to use public recursive nameservers for DNS-01 challenges, ensuring reliable domain validation in local DNS environments.
 - **External Secrets for DNS Service Account**: Integrated `External Secrets` to securely fetch `cert-manager` DNS service account credentials from 1Password.
+
+### January 2026
+
 - **Cert-Manager Integration**: Added `cert-manager` base manifests and configurations to manage TLS certificates within the cluster.
 - **Traefik Ingress Controller**: Deployed `Traefik` as the ingress controller, managed by ArgoCD, and enabled the Gateway API for modern ingress routing.
 - **Gateway API in Cilium**: Enabled Gateway API support in the Cilium configuration to align with modern Kubernetes networking standards.

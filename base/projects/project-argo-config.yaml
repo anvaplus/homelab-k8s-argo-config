@@ -26,5 +26,6 @@ spec:
   - oci://quay.io/jetstack/charts/cert-manager
   - https://charts.longhorn.io/
   - https://cloudnative-pg.github.io/charts
+  - registry-1.docker.io/cloudpirates
 
 status: {}
