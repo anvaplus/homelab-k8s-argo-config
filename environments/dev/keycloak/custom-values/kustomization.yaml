@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patches:
+  - patch: |
+      - op: replace
+        path: "/spec/sources/0/targetRevision"
+        value: "HEAD"
+      - op: replace
+        path: "/spec/sources/1/targetRevision"
+        value: "0.16.4"
+      - op: add
+        path: "/spec/sources/1/helm/valueFiles/-"
+        value: "$valuesRepo/environments/dev/keycloak/custom-values/custom-values.yaml"
+    target:
+      kind: Application
+      name: keycloak
+
+resources:
+  - ../../../../base/keycloak/
+  - keycloak-secrets.yaml

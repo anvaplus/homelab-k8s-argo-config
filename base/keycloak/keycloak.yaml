@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: ""
+    namespace: keycloak
+    server: https://kubernetes.default.svc
+  project: argo-config
+  sources:
+    - repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
+      targetRevision: HEAD
+      ref: valuesRepo
+
+    - repoURL: "registry-1.docker.io/cloudpirates"
+      targetRevision: "0.16.4"
+      chart: keycloak
+      helm:
+        valueFiles:
+          - $valuesRepo/base/keycloak/values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

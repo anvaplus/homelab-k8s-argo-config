@@ -12,3 +12,4 @@ resources:
   - ../cert-manager/
   - ../longhorn/
   - ../database/
+  - ../keycloak/

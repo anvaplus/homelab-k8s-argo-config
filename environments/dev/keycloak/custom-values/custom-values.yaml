@@ -1,0 +1,24 @@
+keycloak:
+  adminUser: admin
+  adminPassword: ""
+  existingSecret: "keycloak-secrets"
+  proxyHeaders: "xforwarded"
+  production: true
+  secretKeys:
+    adminPasswordKey: "admin-password"
+
+# Disable embedded databases
+postgres:
+  enabled: false
+mariadb:
+  enabled: false
+
+database:
+  type: "postgres"
+  host: "cnpg-keycloak-cluster-rw.keycloak.svc.cluster.local"
+  port: "5432"
+  name: "keycloak"
+  existingSecret: "keycloak-db-user"
+  secretKeys:
+    passwordKey: "password"
+    usernameKey: "username"
