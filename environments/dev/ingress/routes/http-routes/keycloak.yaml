@@ -1,0 +1,21 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: keycloak
+  namespace: keycloak
+spec:
+  parentRefs:
+    - kind: Gateway
+      name: traefik-gateway
+      namespace: traefik
+      sectionName: websecure
+  hostnames: [keycloak.dev.thebestpractice.tech]
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: keycloak
+          kind: Service
+          port: 8080
