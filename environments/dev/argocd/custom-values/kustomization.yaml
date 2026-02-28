@@ -11,6 +11,9 @@ patches:
       - op: add
         path: "/spec/sources/1/helm/valueFiles/-"
         value: "$valuesRepo/environments/dev/argocd/custom-values/global.values.yaml"
+      - op: add
+        path: "/spec/sources/1/helm/valueFiles/-"
+        value: "$valuesRepo/environments/dev/argocd/custom-values/security.values.yaml"
     target:
       kind: Application
       name: argo-cd
