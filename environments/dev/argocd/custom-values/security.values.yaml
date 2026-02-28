@@ -1,0 +1,25 @@
+
+configs:
+  cm:
+    # Keycloak OIDC secrets are stored in the secret named "argocd-secret-sso"
+    # and referenced in ArgoCD using its special syntax $<secretName>:key
+    # whill tells ArgoCD to take the value from the key "key" in the secret named "secretName".
+    #
+    # Reference: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
+    # Note: Make sure the secret has the label "app.kubernetes.io/part-of: argocd"
+    oidc.config: |
+    name: Keycloak
+    issuer: https://keycloak.dev.thebestpractice.tech/auth/realms/master
+    clientID: $argocd-secret-sso:clientID
+    clientSecret: $argocd-secret-sso:clientSecret
+    refreshTokenThreshold: 2m
+    requestedScopes: ["openid", "profile", "email", "groups"]
+
+  rbac:
+    # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
+    # The scope value can be a string, or a list of strings.
+    scopes: "[groups]"
+
+    # -- File containing user-defined policies and role definitions.
+    policy.csv: |
+      g, ArgoCDAdmins, role:admin
