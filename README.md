@@ -2,131 +2,107 @@
 
 ## Overview
 
-This repository contains all ArgoCD configurations for the Homelab platform. It manages the installation and configuration of platform tools and infrastructure components across different environments using a GitOps approach.
+This repository is the GitOps control plane for platform services in the homelab cluster.
 
-## 🔗 Related Repositories
+It contains Argo CD projects, platform Applications, shared namespaces/secrets, and environment overlays for infrastructure components such as networking, certificates, storage, and database operators.
 
-This repository is part of a multi-repository GitOps architecture:
+## GitOps Architecture (4 Repositories)
 
-- **[homelab-k8s-argo-config](https://github.com/anvaplus/homelab-k8s-argo-config)** (This repository) - ArgoCD configurations for platform tools and the app-of-apps pattern.
-- **[homelab-k8s-base-manifests](https://github.com/anvaplus/homelab-k8s-base-manifests)** - Base Helm chart templates for applications.
-- **[homelab-k8s-environments](https://github.com/anvaplus/homelab-k8s-environments)** - Environment-specific version declarations for applications.
-- **[homelab-k8s-environments-apps](https://github.com/anvaplus/homelab-k8s-environments-apps)** - Application configuration values and ArgoCD Application definitions.
+The homelab deployment model is split by responsibility:
 
-## How It Works
+- [homelab-k8s-argo-config](https://github.com/anvaplus/homelab-k8s-argo-config): Argo CD projects and platform stack definitions  (this repository).
+- [homelab-k8s-base-manifests](https://github.com/anvaplus/homelab-k8s-base-manifests): Helm charts and library templates used by workloads.
+- [homelab-k8s-environments](https://github.com/anvaplus/homelab-k8s-environments): Version registry per environment (for example image tag/version fields).
+- [homelab-k8s-environments-apps](https://github.com/anvaplus/homelab-k8s-environments-apps): Application catalog and runtime values per environment.
 
-The workflow is based on a GitOps approach with ArgoCD:
+## What This Repository Owns
 
-### Initial Setup Steps
+- Argo CD AppProject and source repository allow-list.
+- Platform components under base (argocd, cilium, ingress, cert-manager, longhorn, cnpg, external-secrets, keycloak).
+- Environment overlays under environments (dev, prod).
+- Kustomize roots for ordered platform installation.
 
-1.  **Create the cluster**: The cluster is installed without a CNI and kube-proxy. As an example, you can see how the cluster is created in the [sidero-omni-talos-proxmox](https://github.com/anvaplus/sidero-omni-talos-proxmox) repository.
-    ```bash
-    omnictl cluster template sync -v -f cluster-template/k8s-dev-dhcp.yaml
-    ```
+This repository does not own workload chart templates or workload runtime values.
 
-2.  **Install Cilium**: Install Cilium using Helm.
-    ```bash
-    helm repo add cilium https://helm.cilium.io/
-    helm repo update
-    helm install \
-        cilium \
-        cilium/cilium \
-        --version 1.18.6 \
-        --namespace kube-system \
-        --set ipam.mode=kubernetes \
-        --set kubeProxyReplacement=true \
-        --set securityContext.capabilities.ciliumAgent="{CHOWN,KILL,NET_ADMIN,NET_RAW,IPC_LOCK,SYS_ADMIN,SYS_RESOURCE,DAC_OVERRIDE,FOWNER,SETGID,SETUID}" \
-        --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}" \
-        --set cgroup.autoMount.enabled=false \
-        --set cgroup.hostRoot=/sys/fs/cgroup \
-        --set k8sServiceHost=localhost \
-        --set k8sServicePort=7445
-    ```
+## Bootstrap Flow
 
-3.  **Install Argo CD**: Install Argo CD with Helm.
-    ```bash
-    helm repo add argo https://argoproj.github.io/argo-helm
-    helm repo update
-    kubectl create namespace argocd
-    helm install argo-cd argo/argo-cd --version 9.3.4 -n argocd
-    ```
+1. Create the cluster (for example from the Talos/Omni repository).
+2. Install Argo CD.
+3. Apply initial project definition:
 
-4.  **Install the main project**: This project allows ArgoCD to manage the repositories.
-    ```bash
-    kubectl create -f /homelab-k8s-argo-config/_initial_setup/project-argo-config.yaml
-    ```
-
-### GitOps Workflow
-
-1.  **Base Configuration**: The `base/` directory contains the base Helm charts and configurations for platform tools. These are meant to be generic and reusable across all environments.
-
-2.  **Environment Overlays**: The `environments/` directory contains environment-specific configurations. Each environment (e.g., `dev`, `prod`) has its own directory where it can override the base configurations using Kustomize. This allows for tailoring applications to the specific needs of each environment.
-
-3.  **App-of-Apps Pattern**: The `_root` directory within each environment is used to implement the app-of-apps pattern in ArgoCD. By running `kubectl apply -k .` in this directory, you install the root applications that, in turn, manage all other applications for that environment.
-
-4.  **Adding New Tools**: To add a new tool, you first add its base configuration to the `base/` directory. Then, you customize it for each environment in the `environments/` directory.
-
-## Repository Structure
-
-The current structure of this repository is as follows, and it will evolve as more tools are installed in the homelab:
-```
-├── base/                     # Base configurations for all tools
-│   ├── argocd/               # ArgoCD itself configuration
-│   ├── cert-manager/         # cert-manager configuration
-│   ├── cilium/               # Cilium CNI configuration
-│   ├── database/             # Database operators and clusters
-│   │   ├── cnpg-cluster/     # CloudNativePG cluster definitions
-│   │   └── cnpg-operator/    # CloudNativePG operator
-│   ├── external-secrets/     # External Secrets Operator configuration
-│   ├── ingress/              # Ingress controllers configuration
-│   │   ├── metallb/          # MetalLB load balancer
-│   │   └── traefik/          # Traefik ingress controller
-│   ├── longhorn/             # Longhorn persistent storage
-│   ├── namespaces/           # Namespace definitions
-│   ├── projects/             # ArgoCD project definitions
-│   └── secrets/              # Secret configurations
-└── environments/             # Environment-specific overlays
-    ├── dev/                  # Development environment configs
-    │   ├── _root/            # Root application for the dev environment
-    │   ├── argocd/           # ArgoCD overrides for dev
-    │   ├── cert-manager/     # cert-manager overrides for dev
-    │   ├── cilium/           # Cilium overrides for dev
-    │   ├── database/         # Database overrides for dev
-    │   │   ├── cnpg-cluster/ # CNPG cluster overrides for dev
-    │   │   └── cnpg-operator/ # CNPG operator overrides for dev
-    │   ├── external-secrets/ # External Secrets overrides for dev
-    │   ├── ingress/          # Ingress overrides for dev
-    │   │   ├── metallb/      # MetalLB configuration for dev
-    │   │   └── traefik/      # Traefik configuration for dev
-    │   ├── longhorn/         # Longhorn overrides for dev
-    │   ├── namespaces/       # Namespaces overrides for dev
-    │   ├── projects/         # ArgoCD project overrides for dev
-    │   └── secrets/          # Secrets overrides for dev
-    └── prod/                 # Production environment configs
+```bash
+kubectl apply -f _initial_setup/project-argo-config.yaml
 ```
 
-## Recent Updates
+4. Apply environment root kustomization (for example dev):
 
-### February 2026
+```bash
+kubectl apply -k environments/dev/_root
+```
 
-- **CloudNativePG Integration**: Deployed the `CloudNativePG` operator and a `Keycloak` database cluster, managed via ArgoCD and Helm, to handle PostgreSQL databases declaratively.
-- **Longhorn Persistent Storage**: Added `Longhorn` for distributed persistent storage, including a dedicated storage class for `CloudNativePG` to optimize database performance.
-- **Ingress for Longhorn UI**: Exposed the Longhorn UI through a dedicated ingress route for easier management.
-- **Sync Waves for Deployment Ordering**: Implemented ArgoCD sync waves to ensure proper deployment order for dependent resources, such as the `CloudNativePG` operator and its clusters.
-- **Gateway API Migration**: Migrated the ingress controller to utilize the Gateway API, enabling the `kubernetesGateway` provider and disabling legacy providers for more robust and standardized ingress management.
-- **HTTPRoute Management**: Deployed a dedicated ArgoCD application to manage `HTTPRoute` resources, improving the organization and management of ingress configurations.
-- **Global Domain Configuration**: Introduced a global configuration file to share a default domain across ArgoCD components, streamlining the setup for ingresses, certificates, and other services.
-- **Wildcard Certificate Automation**: Added `cert-manager` resources to automate the issuance of wildcard certificates using Let's Encrypt and a DNS01 solver, simplifying TLS management.
-- **Public DNS Resolvers for Cert-Manager**: Configured `cert-manager` to use public recursive nameservers for DNS-01 challenges, ensuring reliable domain validation in local DNS environments.
-- **External Secrets for DNS Service Account**: Integrated `External Secrets` to securely fetch `cert-manager` DNS service account credentials from 1Password.
+After bootstrap, Argo CD continuously reconciles platform resources from this repository.
 
-### January 2026
+## How It Connects To App Deployments
 
-- **Cert-Manager Integration**: Added `cert-manager` base manifests and configurations to manage TLS certificates within the cluster.
-- **Traefik Ingress Controller**: Deployed `Traefik` as the ingress controller, managed by ArgoCD, and enabled the Gateway API for modern ingress routing.
-- **Gateway API in Cilium**: Enabled Gateway API support in the Cilium configuration to align with modern Kubernetes networking standards.
-- **MetalLB for Load Balancing**: Integrated `MetalLB` to provide load balancer services, including IP address pool configuration.
-- **1Password Integration**: Set up the `External Secrets Operator` to fetch secrets from `1Password`, enhancing security and secret management.
-- **Namespace Management**: Added centralized namespace management through ArgoCD for better resource organization.
-- **Cilium Migration to ArgoCD**: Migrated the Cilium installation to be managed by ArgoCD for declarative configuration and automated deployments.
-- **ArgoCD Project and Application Setup**: Configured the initial ArgoCD project and a root application to manage resources in a GitOps-centric workflow.
+Platform setup here enables workload deployments that are defined in the other 3 repositories:
+
+1. Charts come from homelab-k8s-base-manifests.
+2. Version values come from homelab-k8s-environments.
+3. Runtime values and Argo CD app definitions come from homelab-k8s-environments-apps.
+
+The AppProject in base/projects includes all required source repositories so multi-source Applications can resolve successfully.
+
+## Repository Layout
+
+Run from repository root:
+
+```bash
+tree -d -L 3
+```
+
+```text
+.
+├── _initial_setup
+├── base
+│   ├── argocd
+│   ├── cert-manager
+│   ├── cilium
+│   ├── database
+│   │   ├── cnpg-cluster
+│   │   └── cnpg-operator
+│   ├── external-secrets
+│   │   ├── 1password-connect
+│   │   └── external-secrets
+│   ├── ingress
+│   │   ├── metallb
+│   │   └── traefik
+│   ├── keycloak
+│   ├── longhorn
+│   ├── namespaces
+│   ├── projects
+│   └── secrets
+│       ├── argocd
+│       ├── cert-manager
+│       └── external-secrets-config
+└── environments
+    ├── dev
+    │   ├── _root
+    │   ├── argocd
+    │   ├── cert-manager
+    │   ├── cilium
+    │   ├── database
+    │   ├── external-secrets
+    │   ├── ingress
+    │   ├── keycloak
+    │   ├── longhorn
+    │   ├── namespaces
+    │   ├── projects
+    │   └── secrets
+    └── prod
+```
+
+## Change Guidelines
+
+- Add new platform capability in base first, then wire overlay/customization in each environment.
+- Keep environment-specific values in environments overlays, not in base.
+- When adding new workload source repositories, update the AppProject sourceRepos allow-list.
