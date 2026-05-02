@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-cloudflare
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: ""
+    namespace: cloudflare
+    server: https://kubernetes.default.svc
+  project: argo-config
+  source:
+    repoURL: https://github.com/anvaplus/homelab-k8s-argo-config
+    targetRevision: HEAD
+    path: environments/dev/ingress/cloudflare/custom-values
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

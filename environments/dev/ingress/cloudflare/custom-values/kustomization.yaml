@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patches:
+  - patch: |-
+      - op: replace
+        path: "/data/config.yaml"
+        value: |
+          # Name of the tunnel you want to run
+          tunnel: k8s-dev-homelab
+          credentials-file: /etc/cloudflared/creds/credentials.json
+
+          # Serves the metrics server under /metrics and the readiness server under /ready
+          metrics: 0.0.0.0:2000
+          no-autoupdate: true
+          protocol: http2
+          
+          ingress:
+          - hostname: hugo-traefik.thebestpractice.tech
+            service: http://traefik.traefik.svc.cluster.local:80
+          
+          # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
+          - service: http_status:404
+    target:
+      kind: ConfigMap
+      name: cloudflared
+      namespace: cloudflare
+
+  - patch: |-
+      - op: replace
+        path: "/spec/data/0/remoteRef/key"
+        value: EXTSEC_1Password_k8s_cloudflare_dev_homelab
+    target:
+      kind: ExternalSecret
+      name: tunnel-credentials
+      namespace: cloudflare
+
+
+resources:
+  - ../../../../../base/ingress/cloudflare/
